@@ -8,14 +8,17 @@ import android.media.MediaPlayer
 import android.os.*
 import android.text.TextUtils
 import android.util.Log
+import android.widget.Toast
 import androidx.work.*
 import com.android.keepalivetest.KeepAliveAidl
+import com.example.locklistener.SecondActivity
 import com.example.locklistener.lock_services.KeepAliveRuning
 import com.example.locklistener.lock_services.config.KeepAliveConfig
 import com.example.locklistener.lock_services.config.NotificationUtils
 import com.example.locklistener.lock_services.config.RunMode.HIGH_POWER_CONSUMPTION
 import com.example.locklistener.lock_services.receivers.NotificationClickReceiver
 import com.example.locklistener.lock_services.receivers.OnepxReceiver
+import com.example.locklistener.lock_services.utils.KeepAliveUtils
 import java.util.*
 
 class LocalService : Service() {
@@ -58,7 +61,8 @@ class LocalService : Service() {
             try {
                 if (mBilder != null && KeepAliveConfig.foregroundNotification != null) {
                     val guardAidl = KeepAliveAidl.Stub.asInterface(service)
-                    guardAidl.wakeUp(KeepAliveConfig.TITLE,
+                    guardAidl.wakeUp(
+                        KeepAliveConfig.TITLE,
                         KeepAliveConfig.CONTENT,
                         KeepAliveConfig.DEF_ICONS
                     )
@@ -193,6 +197,8 @@ class LocalService : Service() {
 
     private inner class ScreenStateReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
+            Toast.makeText(context, "onReceive 200 $intent", Toast.LENGTH_SHORT).show()
+            Log.e("fdkjhfdf", "196 onReceive: ${intent.action}")
             if (intent.action == "_ACTION_SCREEN_OFF") {
                 isPause = false
                 isMusicPlay = true
@@ -200,14 +206,50 @@ class LocalService : Service() {
             } else if (intent.action == "_ACTION_SCREEN_ON") {
                 isPause = true
                 isMusicPlay = false
+                openActivity(intent.action!!, context)
                 pause()
             }
         }
     }
 
+    fun openActivity(intentAction: String, context: Context) {
+        Log.e("fdhjfkmdi", "openActivity: $intentAction")
+        Toast.makeText(context, "line 217 $intentAction", Toast.LENGTH_SHORT).show()
+        val appIsForeground = KeepAliveUtils.IsForeground(context)
+        if (intentAction == "_ACTION_SCREEN_OFF") {
+            try {
+                val it = Intent(context, SecondActivity::class.java)
+                it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                // context.startActivity(it)
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+            //   context.sendBroadcast(Intent("_ACTION_SCREEN_OFF"))
+        } else if (intentAction == "_ACTION_SCREEN_ON") {
+            if (!appIsForeground) {
+                try {
+                    Toast.makeText(context, "line 232 appIsForeground ->intent", Toast.LENGTH_SHORT).show()
+                    val it = Intent(context, SecondActivity::class.java)
+                    it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                    context.startActivity(it)
+                } catch (e: java.lang.Exception) {
+                    Toast.makeText(context, "line 238 appIsForeground ->${e.message}", Toast.LENGTH_SHORT).show()
+                    e.printStackTrace()
+                }
+            } else {
+                Toast.makeText(context, " line 242 $appIsForeground", Toast.LENGTH_SHORT).show()
+            }
+            //     context.sendBroadcast(Intent("_ACTION_SCREEN_ON"))
+        }
+
+    }
+
     private inner class ServiceAliver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            Log.e(TAG, "onReceive- (LocalService-276)-->isMusicPlay = $isMusicPlay:${intent.action}")
+            Log.e("fdkjhfdf", "onReceive- (LocalService-210)-->isMusicPlay = $isMusicPlay:${intent.action}")
+            Toast.makeText(context, "ServiceAliver -> ${intent.action}", Toast.LENGTH_SHORT).show()
             if (isMusicPlay) {
                 pause()
             } else {

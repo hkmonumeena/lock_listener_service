@@ -1,23 +1,16 @@
 package com.example.locklistener
 
 
-import android.app.ActivityManager
-import android.app.AlarmManager
 import android.app.Application
-import android.app.PendingIntent
-import android.content.*
-import android.os.Process.killProcess
-import android.os.Process.myPid
+import android.content.ComponentCallbacks2
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.*
-import androidx.work.*
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ProcessLifecycleOwner
 import com.example.locklistener.lock_services.KeepAliveManager
 import com.example.locklistener.lock_services.config.ForegroundNotification
 import com.example.locklistener.lock_services.config.RunMode
-import com.example.locklistener.lock_services.receivers.OnepxReceiver
-import com.example.locklistener.lock_services.service.LocalService
-import java.util.*
 
 class MyApplication : Application(), LifecycleEventObserver, ComponentCallbacks2 {
     override fun onCreate() {
@@ -43,10 +36,10 @@ class MyApplication : Application(), LifecycleEventObserver, ComponentCallbacks2
     override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
         when (event) {
             Lifecycle.Event.ON_STOP -> {
-                Thread.sleep(300)
                 startLockScreenServices()
             }
             else -> {}
         }
     }
 }
+

@@ -14,7 +14,7 @@ class SecondActivity : AppCompatActivity() {
     private fun checkScreenOn() {
         val pm = getSystemService(POWER_SERVICE) as PowerManager
         if (!pm.isScreenOn) {
-            finishAffinity();
+           // finishAffinity();
         }
     }
 }
