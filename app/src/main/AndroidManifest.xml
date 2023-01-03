@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+        <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+        <uses-permission android:name="android.permission.ACTION_MANAGE_OVERLAY_PERMISSION" />
 
     <application
         android:allowBackup="true"
@@ -50,6 +52,13 @@
             android:name=".lock_services.service.JobHandlerService"
             android:stopWithTask="false"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
+
+        <service
+            android:name=".lock_services.service.MyService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="dataSync|phoneCall"
+            android:stopWithTask="false" />
 
 
 <!--        <receiver android:name=".lock_services.receivers.NotificationClickReceiver"

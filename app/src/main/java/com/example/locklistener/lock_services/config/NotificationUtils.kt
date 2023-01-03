@@ -53,7 +53,8 @@ class NotificationUtils private constructor(private val mContext: Context) : Con
         var content = content
         var icon = icon
         val pendingIntent =
-            PendingIntent.getBroadcast(mContext, 0, intent!!, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+            PendingIntent.getBroadcast(mContext, 0, intent!!,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         if (TextUtils.isEmpty(title)) {
             title = mContext.applicationInfo.name
         }

@@ -206,7 +206,7 @@ class LocalService : Service() {
             } else if (intent.action == "_ACTION_SCREEN_ON") {
                 isPause = true
                 isMusicPlay = false
-                openActivity(intent.action!!, context)
+              //  openActivity(intent.action!!, context)
                 pause()
             }
         }

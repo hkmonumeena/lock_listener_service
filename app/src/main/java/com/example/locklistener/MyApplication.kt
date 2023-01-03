@@ -3,6 +3,7 @@ package com.example.locklistener
 
 import android.app.Application
 import android.content.ComponentCallbacks2
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -39,6 +40,14 @@ class MyApplication : Application(), LifecycleEventObserver, ComponentCallbacks2
                 startLockScreenServices()
             }
             else -> {}
+        }
+    }
+
+
+    companion object {
+        private var appContext: Context? = null
+        fun getAppContext(): Context? {
+            return appContext
         }
     }
 }
